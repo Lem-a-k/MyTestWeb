@@ -1,16 +1,19 @@
-# This is a sample Python script.
+import os
 
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
-
-
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
-
-
-# Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    print_hi('PyCharm')
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+    os.chdir("c:/temp/MyTestWeb")
+    print(os.getcwd())
+    # print(os.listdir())
+    # for elem in os.walk(os.getcwd()):  # os.scandir():
+    #     cur, dirs, files = elem
+    #     print(cur, dirs, files)
+        # if elem.is_file():
+        #     print('file', elem.stat())
+        # else:
+        #     print(elem.stat())
+    if os.path.exists("input.txt"):
+        print('yes')
+    else:
+        with open("input.txt", 'w') as file:
+            file.write('hello')
+        print('created')
