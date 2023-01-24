@@ -1,5 +1,10 @@
-from zipfile import ZipFile
+import sys
+from itertools import cycle
 
-with ZipFile('TestZip.zip') as my_zip:
-    with my_zip.open('input.txt') as file:
-        print(file.read().decode('utf-8'))
+try:
+    assert sys.argv[1:]
+    print(sum(c * int(x) for x, c in zip(sys.argv[1:], cycle([1, -1]))))
+except AssertionError:
+    print("NO PARAMS")
+except Exception as e:
+    print(e.__class__.__name__, e)
