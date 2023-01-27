@@ -2,12 +2,11 @@
   'metaDataProperty': {
     'GeocoderMetaData': {
       'precision': 'exact',
-      'text': 'Россия, Москва, Красная площадь, 1',
+      'text': 'Россия, Саратов, Большая Горная улица, 1',
       'kind': 'house',
       'Address': {
         'country_code': 'RU',
-        'formatted': 'Россия, Москва, Красная площадь, 1',
-        'postal_code': '125009',
+        'formatted': 'Россия, Саратов, Большая Горная улица, 1',
         'Components': [
           {
             'kind': 'country',
@@ -15,19 +14,23 @@
           },
           {
             'kind': 'province',
-            'name': 'Центральный федеральный округ'
+            'name': 'Приволжский федеральный округ'
           },
           {
             'kind': 'province',
-            'name': 'Москва'
+            'name': 'Саратовская область'
+          },
+          {
+            'kind': 'area',
+            'name': 'муниципальное образование город Саратов'
           },
           {
             'kind': 'locality',
-            'name': 'Москва'
+            'name': 'Саратов'
           },
           {
             'kind': 'street',
-            'name': 'Красная площадь'
+            'name': 'Большая Горная улица'
           },
           {
             'kind': 'house',
@@ -37,19 +40,19 @@
       },
       'AddressDetails': {
         'Country': {
-          'AddressLine': 'Россия, Москва, Красная площадь, 1',
+          'AddressLine': 'Россия, Саратов, Большая Горная улица, 1',
           'CountryNameCode': 'RU',
           'CountryName': 'Россия',
           'AdministrativeArea': {
-            'AdministrativeAreaName': 'Москва',
-            'Locality': {
-              'LocalityName': 'Москва',
-              'Thoroughfare': {
-                'ThoroughfareName': 'Красная площадь',
-                'Premise': {
-                  'PremiseNumber': '1',
-                  'PostalCode': {
-                    'PostalCodeNumber': '125009'
+            'AdministrativeAreaName': 'Саратовская область',
+            'SubAdministrativeArea': {
+              'SubAdministrativeAreaName': 'муниципальное образование город Саратов',
+              'Locality': {
+                'LocalityName': 'Саратов',
+                'Thoroughfare': {
+                  'ThoroughfareName': 'Большая Горная улица',
+                  'Premise': {
+                    'PremiseNumber': '1'
                   }
                 }
               }
@@ -59,15 +62,15 @@
       }
     }
   },
-  'name': 'Красная площадь, 1',
-  'description': 'Москва, Россия',
+  'name': 'Большая Горная улица, 1',
+  'description': 'Саратов, Россия',
   'boundedBy': {
     'Envelope': {
-      'lowerCorner': '37.613674 55.752931',
-      'upperCorner': '37.621884 55.757561'
+      'lowerCorner': '46.05711 51.526553',
+      'upperCorner': '46.06532 51.531674'
     }
   },
   'Point': {
-    'pos': '37.617779 55.755246'
+    'pos': '46.061215 51.529113'
   }
 }
