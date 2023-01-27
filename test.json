@@ -1,93 +1,64 @@
 {
-  "response": {
-    "GeoObjectCollection": {
-      "metaDataProperty": {
-        "GeocoderResponseMetaData": {
-          "request": "Саратов Большая Горная 1",
-          "results": "10",
-          "found": "1"
-        }
-      },
-      "featureMember": [
-        {
-          "GeoObject": {
-            "metaDataProperty": {
-              "GeocoderMetaData": {
-                "precision": "exact",
-                "text": "Россия, Саратов, Большая Горная улица, 1",
-                "kind": "house",
-                "Address": {
-                  "country_code": "RU",
-                  "formatted": "Россия, Саратов, Большая Горная улица, 1",
-                  "Components": [
-                    {
-                      "kind": "country",
-                      "name": "Россия"
-                    },
-                    {
-                      "kind": "province",
-                      "name": "Приволжский федеральный округ"
-                    },
-                    {
-                      "kind": "province",
-                      "name": "Саратовская область"
-                    },
-                    {
-                      "kind": "area",
-                      "name": "муниципальное образование город Саратов"
-                    },
-                    {
-                      "kind": "locality",
-                      "name": "Саратов"
-                    },
-                    {
-                      "kind": "street",
-                      "name": "Большая Горная улица"
-                    },
-                    {
-                      "kind": "house",
-                      "name": "1"
-                    }
-                  ]
-                },
-                "AddressDetails": {
-                  "Country": {
-                    "AddressLine": "Россия, Саратов, Большая Горная улица, 1",
-                    "CountryNameCode": "RU",
-                    "CountryName": "Россия",
-                    "AdministrativeArea": {
-                      "AdministrativeAreaName": "Саратовская область",
-                      "SubAdministrativeArea": {
-                        "SubAdministrativeAreaName": "муниципальное образование город Саратов",
-                        "Locality": {
-                          "LocalityName": "Саратов",
-                          "Thoroughfare": {
-                            "ThoroughfareName": "Большая Горная улица",
-                            "Premise": {
-                              "PremiseNumber": "1"
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
+  'GeoObject': {
+    'metaDataProperty': {
+      'GeocoderMetaData': {
+        'precision': 'other',
+        'text': 'Россия, Саратов',
+        'kind': 'locality',
+        'Address': {
+          'country_code': 'RU',
+          'formatted': 'Россия, Саратов',
+          'Components': [
+            {
+              'kind': 'country',
+              'name': 'Россия'
+            },
+            {
+              'kind': 'province',
+              'name': 'Приволжский федеральный округ'
+            },
+            {
+              'kind': 'province',
+              'name': 'Саратовская область'
+            },
+            {
+              'kind': 'area',
+              'name': 'муниципальное образование город Саратов'
+            },
+            {
+              'kind': 'locality',
+              'name': 'Саратов'
+            }
+          ]
+        },
+        'AddressDetails': {
+          'Country': {
+            'AddressLine': 'Россия, Саратов',
+            'CountryNameCode': 'RU',
+            'CountryName': 'Россия',
+            'AdministrativeArea': {
+              'AdministrativeAreaName': 'Саратовская область',
+              'SubAdministrativeArea': {
+                'SubAdministrativeAreaName': 'муниципальное образование город Саратов',
+                'Locality': {
+                  'LocalityName': 'Саратов'
                 }
               }
-            },
-            "name": "Большая Горная улица, 1",
-            "description": "Саратов, Россия",
-            "boundedBy": {
-              "Envelope": {
-                "lowerCorner": "46.05711 51.526553",
-                "upperCorner": "46.06532 51.531674"
-              }
-            },
-            "Point": {
-              "pos": "46.061215 51.529113"
             }
           }
         }
-      ]
+      }
+    },
+    'name': 'Саратов',
+    'description': 'Россия',
+    'boundedBy': {
+      'Envelope': {
+        'lowerCorner': '45.80542 51.392303',
+        'upperCorner': '46.209329 51.688935'
+      }
+    },
+    'Point': {
+      'pos': '46.034266 51.533562'
     }
   }
 }
