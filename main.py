@@ -1,23 +1,39 @@
-import os
-import math
+import argparse
 
-BASE, UNITS = 1024, 'Б'
-POWERS = ['', 'К', 'М', 'Г']
+# prefix_chars='+/' для аргументов в стиле windows
+parser = argparse.ArgumentParser()
 
+parser.add_argument('x', type=int)
+parser.add_argument('args', nargs='*')  # '+'
 
-def human_read_format(size):
-    power = int(math.floor(math.log(size, BASE) if size else 0))
-    w = size / BASE ** power
-    return f'{round(w)}{POWERS[power] + UNITS}'
+parser.add_argument('-l', '--left')
 
+parser.add_argument('-i', '--input', type=argparse.FileType('r'))
+parser.add_argument('--log', type=argparse.FileType('a'))
 
-def get_files_sizes():
-    lines = []
-    for item in os.listdir():  # path=os.getcwd()
-        if os.path.isfile(item):
-            lines.append(f'{item} {human_read_format(os.path.getsize(item))}')
-    return '\n'.join(lines)
+# обязательный
+parser.add_argument('-r', '--required', required=True)
 
+# значение по умолчанию
+parser.add_argument('--base', default=2, type=int)
 
-if __name__ == '__main__':
-    print(get_files_sizes())
+# флаги
+parser.add_argument('-up', '--up_case', action='store_true')
+
+# варианты
+parser.add_argument("--product", choices=['car', 'milk', 'apple'], default='milk')
+
+# сохранить под другим именем
+parser.add_argument('--dd-mm-yyyy', dest='date')
+
+# другие действия, например, задать значение другой переменной
+parser.add_argument('--no-name', action='store_const', const="no", dest='name')
+
+my_args = parser.parse_args()
+
+# неполный парсинг
+# known_args, other_args = parser.parse_known_args()
+print(my_args)
+print(my_args.x)
+print(my_args.required)
+
