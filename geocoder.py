@@ -20,7 +20,7 @@ def geocode(address):
     else:
         raise RuntimeError(
             f"""Ошибка выполнения запроса:
-            {geocoder_request}
+            {response.url}
             Http статус: {response.status_code} ({response.reason})""")
 
     # Получаем первый топоним из ответа геокодера.
