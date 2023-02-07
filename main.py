@@ -5,40 +5,81 @@ import pygame
 
 from mapapi import get_map
 
+MAP_FILE = "map.png"
 
-def main():
-    coordinates = '151.21529330927066,-33.85653004033911'
-    z = 17
-    response = get_map(coordinates, map_type='sat', add_params={'z': z})
+
+class RequestException(Exception):
+    pass
+
+
+class SaveFileException(Exception):
+    pass
+
+
+def get_and_save_image(coordinates, map_type='map', add_params=None):
+    response = get_map(coordinates, map_type, add_params=add_params)
 
     if not response:
-        print("Ошибка выполнения запроса:")
-        print(response.url)
-        print("Http статус:", response.status_code, "(", response.reason, ")")
-        sys.exit(1)
+        raise SaveFileException(f"Http статус: {response.status_code} ({response.reason})\n{response.url}")
 
-    # Запишем полученное изображение в файл.
-    map_file = "map.png"
+    map_file = MAP_FILE
     try:
         with open(map_file, "wb") as file:
             file.write(response.content)
     except IOError as ex:
-        print("Ошибка записи временного файла:", ex)
-        sys.exit(2)
+        raise SaveFileException(f'Ошибка записи временного файла: {ex}')
 
-    # Инициализируем pygame
+
+def main():
+    coordinates = '151.21529330927066,-33.85653004033911'
+    z = 17
+
+    try:
+        get_and_save_image(coordinates, map_type='sat', add_params={'z': z})
+    except (RequestException, SaveFileException) as e:
+        print(e)
+        exit(0)
+
     pygame.init()
     screen = pygame.display.set_mode((600, 450))
-    # Рисуем картинку, загружаемую из только что созданного файла.
-    screen.blit(pygame.image.load(map_file), (0, 0))
-    # Переключаем экран и ждем закрытия окна.
+
+    clock = pygame.time.Clock()
+    fps = 60
+    running = True
+
+    screen.blit(pygame.image.load(MAP_FILE), (0, 0))
     pygame.display.flip()
-    while pygame.event.wait().type != pygame.QUIT:
-        pass
+    while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+            elif event.type == pygame.KEYUP:
+                if event.key in (pygame.K_PAGEUP, pygame.K_KP_PLUS, pygame.K_PAGEDOWN, pygame.K_KP_MINUS):
+                    if event.key in (pygame.K_PAGEUP, pygame.K_KP_PLUS):
+                        print('+')
+                        change = 1
+                    else:
+                        print('-')
+                        change = -1
+                    tmp_z = z + change
+                    while 1 <= tmp_z <= 25:
+                        try:
+                            get_and_save_image(coordinates, map_type='sat', add_params={'z': tmp_z})
+                        except (RequestException, SaveFileException):
+                            tmp_z += change
+                        else:
+                            z = tmp_z
+                            break
+                    print(z)
+                    screen.blit(pygame.image.load(MAP_FILE), (0, 0))
+                    pygame.display.flip()
+
+        # pygame.display.flip()
+        clock.tick(fps)
 
     pygame.quit()
     # Удаляем за собой файл с изображением.
-    os.remove(map_file)
+    os.remove(MAP_FILE)
 
 
 if __name__ == '__main__':
