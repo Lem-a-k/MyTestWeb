@@ -31,7 +31,9 @@ def get_and_save_image(coordinates, map_type='map', add_params=None):
 
 
 def main():
-    coordinates = '151.21529330927066,-33.85653004033911'
+    coordinates = "37.617779,55.755246"
+    # '37.530874,55.703006'  # '46.010245,51.538828'  # '151.21529330927066,-33.85653004033911'
+
     z = 17
 
     try:
