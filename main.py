@@ -39,12 +39,25 @@ def main():
     spn = "0.01,0.01"
 
     pts = []
-    answers = find_businesses(coordinates, spn, "магазин", results=20)
+    answers = find_businesses(coordinates, spn, "магазин", results=10)
+    m1_min, m1_max, m2_min, m2_max = None, None, None, None
     for answer in answers:
-        pts.append(','.join(map(str, answer['geometry']['coordinates'])))
+        coords = answer['geometry']['coordinates']
+        pts.append(','.join(map(str, coords)))
+        if m1_min is None or m1_min > coords[0]:
+            m1_min = coords[0]
+        if m1_max is None or m1_max < coords[0]:
+            m1_max = coords[0]
+        if m2_min is None or m2_min > coords[1]:
+            m2_min = coords[1]
+        if m2_max is None or m2_max < coords[1]:
+            m2_max = coords[1]
+    spn_values = abs(m1_max - m1_min) / 2 + 0.001, abs(m2_max - m2_min) / 2 + 0.001
+    print(spn_values)
     print(pts)
     z = 13
-    add_params = {'z': z, 'pt': "~".join(f"{pt},pm{random.choice(pt_colors)}l1" for pt in pts)}
+    add_params = {'spn': ','.join(map(str, spn_values)),
+                  'pt': "~".join(f"{pt},pm{random.choice(pt_colors)}l1" for pt in pts)}
     print(add_params)
 
     try:
