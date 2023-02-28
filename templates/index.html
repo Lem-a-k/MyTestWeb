@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ title }}</title>
+</head>
+<body>
+ {% if username %}
+       <h1>Привет, {{ username }}!</h1>
+ {% else %}
+       <h1>Привет, аноним!</h1>
+ {% endif %}
+
+    <br/>Ура!<br>
+    <a href='/second'>Second</a><br>
+    <a href='/image_sample'>image_sample</a><br>
+    <a href='/sample_page'>sample_page (with Bootstrap)</a><br>
+    <a href='/form_sample'>Сверхсекретная форма</a>
+    {{ main_part }}
+</body>
+</html>

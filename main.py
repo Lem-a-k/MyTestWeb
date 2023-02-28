@@ -1,4 +1,4 @@
-from flask import Flask, url_for, request
+from flask import Flask, url_for, request, render_template
 
 app = Flask(__name__)
 
@@ -6,12 +6,15 @@ app = Flask(__name__)
 @app.route('/')
 @app.route('/index')
 def main_page():
-    return """<h1>Привет, Яндекс!</h1><br />Ура!<br>
-    <a href='/second'>Second</a><br>
-    <a href='/image_sample'>image_sample</a><br>
-    <a href='/sample_page'>sample_page (with Bootstrap)</a><br>
-    <a href='/form_sample'>Сверхсекретная форма</a>"""
+    user = "Ученик Лицея Академии Яндекса"
+    return render_template('index.html', title='Домашняя страница',
+                           username=user, main_part="<p>Text</p><p>Text2</p>")
 
+@app.route('/another_index')
+def another_main_page():
+    user = "Ученик Лицея Академии Яндекса"
+    return render_template('index.html', title='Домашняя страница',
+                           main_part="Это ещё одна страничка")
 
 @app.route('/second')
 def second_page():
@@ -87,7 +90,7 @@ def form_sample():
                             <h1>Форма для регистрации в суперсекретной системе</h1>
                             <h2>(сверхсекретно!!!)</h2>
                             <div>
-                                <form class="login_form" method="post">
+                                <form class="login_form" method="post" enctype="multipart/form-data">
                                     <input type="email" class="form-control" id="email" aria-describedby="emailHelp" placeholder="Введите адрес почты" name="email">
                                     <input type="password" class="form-control" id="password" placeholder="Введите пароль" name="password">
                                     <div class="form-group">
@@ -133,14 +136,21 @@ def form_sample():
                           </body>
                         </html>'''
     elif request.method == 'POST':
-        print(request.form['email'])
-        print(request.form['password'])
-        print(request.form['class'])
-        print(request.form['file'])
-        print(request.form['about'])
-        print(request.form['accept'])
-        print(request.form['sex'])
-        return "Форма отправлена <a href='/form_sample'>Заполнить форму повторно</a>"
+        try:
+            print(request.form['email'])
+            print(request.form['password'])
+            print(request.form['class'])
+            # print(request.form['file'])
+            print(request.form['about'])
+            print(request.form['accept'])
+            print(request.form['sex'])
+            f = request.files['file']
+            with open(f'uploaded_file_{f.filename}', 'wb') as out_file:
+                out_file.write(f.read())
+            return "Форма отправлена <a href='/form_sample'>Заполнить форму повторно</a>"
+        except Exception as e:
+            print(e, type(e))
+            return "Отправка не удалась <a href='/form_sample'>Заполнить форму повторно</a>"
 
 
 if __name__ == '__main__':
