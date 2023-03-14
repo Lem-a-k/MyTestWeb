@@ -1,4 +1,4 @@
-from flask import Flask, url_for, request, render_template, redirect
+from flask import Flask, url_for, render_template, redirect, session
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField, FileField
 from wtforms.validators import DataRequired
@@ -11,6 +11,7 @@ from data.news import News
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
+
 
 user = "Ученик Лицея Академии Яндекса"
 
@@ -53,7 +54,15 @@ def login():
 @app.route('/')
 @app.route('/index')
 def main_page():
+    session.permanent = True
+    session['visits_count'] = session.get('visits_count', 0) + 1
+    with open('visits.txt') as in_file:
+        visits = int(in_file.read())
+    visits += 1
+    with open('visits.txt', 'w') as out_file:
+        out_file.write(str(visits))
     return render_template('index.html', title='Домашняя страница', username=user,
+                           visits=session['visits_count'], visits_server=visits,
                            css_file=url_for('static', filename='css/styles.css'))
 
 
