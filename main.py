@@ -1,7 +1,8 @@
 from flask import Flask, url_for, request, render_template, redirect
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, FileField
 from wtforms.validators import DataRequired
+from werkzeug.utils import secure_filename
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from data import db_session
@@ -21,6 +22,23 @@ class LoginForm(FlaskForm):
     password = PasswordField('Пароль', validators=[DataRequired()])
     remember_me = BooleanField('Запомнить меня')
     submit = SubmitField('Войти')
+
+
+class AvatarForm(FlaskForm):
+    file = FileField("Файл", validators=[DataRequired()])
+    submit = SubmitField('Загрузить')
+
+
+@app.route('/avatar', methods=['GET', 'POST'])
+def avatar():
+    form = AvatarForm()
+    if form.validate_on_submit():
+        avatar_file = url_for('static', filename=f'img/loaded_{secure_filename(form.file.data.filename)}')
+        avatar_file = avatar_file.lstrip('/')
+        print(avatar_file)
+        form.file.data.save(avatar_file)
+        return render_template('avatar.html', form=form, avatar=avatar_file)
+    return render_template('avatar.html', form=form)
 
 
 @app.route('/login', methods=['GET', 'POST'])
