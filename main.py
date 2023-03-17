@@ -1,6 +1,6 @@
 from flask import Flask, url_for, render_template, redirect, session
 from flask_wtf import FlaskForm
-from wtforms import EmailField, PasswordField, BooleanField, SubmitField, FileField
+from wtforms import EmailField, StringField, PasswordField, BooleanField, SubmitField, FileField
 from wtforms.validators import DataRequired
 from werkzeug.utils import secure_filename
 from flask_login import LoginManager, login_user
@@ -30,10 +30,21 @@ class LoginForm(FlaskForm):
     submit = SubmitField('Войти')
 
 
+class RegistrationForm(FlaskForm):
+    email = EmailField('Почта', validators=[DataRequired()])
+    password = PasswordField('Пароль', validators=[DataRequired()])
+    # TODO: повтор пароля и проверки
+    name = StringField('Имя')
+    # TODO: поле "о себе" -> about
+    submit = SubmitField('Зарегистрироваться')
+
+
 class AvatarForm(FlaskForm):
     file = FileField("Файл", validators=[DataRequired()])
     submit = SubmitField('Загрузить')
 
+
+# TODO: logout
 
 @app.route('/avatar', methods=['GET', 'POST'])
 def avatar():
@@ -63,8 +74,21 @@ def login():
     return render_template('login.html', title='Авторизация', form=form)
 
 
-# registration
-# generate_password_hash('123')
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    form = RegistrationForm()
+    if form.validate_on_submit():
+        db_sess = db_session.create_session()
+        user = db_sess.query(User).filter(User.email == form.email.data).first()
+        if user:
+            return render_template('register.html',
+                                   message="Пользователь с такой почтой уже зарегистрирован",
+                                   form=form)
+        add_user(form.email.data, form.password.data, form.name.data)
+        # TODO: сообщение об успешной регистрации
+        return redirect("/login")
+    return render_template('register.html', title='Регистрация', form=form)
+
 
 @app.route('/')
 @app.route('/index')
@@ -113,14 +137,22 @@ def main():
     app.run()  # port=8080, host='127.0.0.1'
 
 
-def tmp_fill_base():
-    user = User()
-    user.name = "Админ"
-    user.about = "биография пользователя 1"
-    user.email = "admin@email.com"
-    user.hashed_password = User.get_password_hash("qwerty")
+def add_user(email, password, name=None, about=None):
     db_sess = db_session.create_session()
+    user = User()
+    user.email = email
+    user.hashed_password = User.get_password_hash(password)
+    if name is not None:
+        user.name = name
+    if about is not None:
+        user.about = about
     db_sess.add(user)
+    db_sess.commit()
+
+
+def tmp_fill_base():
+    add_user("admin@email.com", "qwerty", "Админ", "биография пользователя 1")
+    db_sess = db_session.create_session()
     news = News(title="Первая новость", content="Привет блог!",
                 user_id=1, is_private=False)
     db_sess.add(news)
