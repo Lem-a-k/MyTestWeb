@@ -5,7 +5,7 @@ from wtforms.validators import DataRequired
 from werkzeug.utils import secure_filename
 from flask_login import LoginManager, login_user
 
-from data import db_session
+from data import db_session, news_api
 from data.users import User
 from data.news import News
 
@@ -133,7 +133,7 @@ def main():
         #             user_id=5, is_private=False)
         # db_sess.add(news)
         # db_sess.commit()
-
+    app.register_blueprint(news_api.blueprint)
     app.run()  # port=8080, host='127.0.0.1'
 
 
