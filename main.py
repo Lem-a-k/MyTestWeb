@@ -3,7 +3,6 @@ from flask_wtf import FlaskForm
 from wtforms import EmailField, PasswordField, BooleanField, SubmitField, FileField
 from wtforms.validators import DataRequired
 from werkzeug.utils import secure_filename
-from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import LoginManager, login_user
 
 from data import db_session
@@ -14,8 +13,6 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
 login_manager = LoginManager()
 login_manager.init_app(app)
-
-user = "Ученик Лицея Академии Яндекса"
 
 DEBUG_MODE = True
 
@@ -56,14 +53,18 @@ def login():
     if form.validate_on_submit():
         db_sess = db_session.create_session()
         user = db_sess.query(User).filter(User.email == form.email.data).first()
-        if user:  # and user.check_password(form.password.data):  # hash!!!
+        if user and user.check_password(form.password.data):
             login_user(user, remember=form.remember_me.data)
+            session['user_name'] = user.name
             return redirect("/")
         return render_template('login.html',
                                message="Неправильный логин или пароль",
                                form=form)
     return render_template('login.html', title='Авторизация', form=form)
 
+
+# registration
+# generate_password_hash('123')
 
 @app.route('/')
 @app.route('/index')
@@ -75,14 +76,16 @@ def main_page():
     visits += 1
     with open('visits.txt', 'w') as out_file:
         out_file.write(str(visits))
-    return render_template('index.html', title='Домашняя страница', username=user,
+    return render_template('index.html', title='Домашняя страница',
+                           username=session['user_name'] if 'user_name' in session else 'Гость',
                            visits=session['visits_count'], visits_server=visits,
                            css_file=url_for('static', filename='css/styles.css'))
 
 
 @app.route('/second_page')
 def second_page():
-    return render_template('second.html', title='Вторая страница', username=user,
+    return render_template('second.html', title='Вторая страница',
+                           username=session['user_name'] if 'user_name' in session else 'Гость',
                            css_file=url_for('static', filename='css/styles.css'))
 
 
@@ -115,6 +118,7 @@ def tmp_fill_base():
     user.name = "Админ"
     user.about = "биография пользователя 1"
     user.email = "admin@email.com"
+    user.hashed_password = User.get_password_hash("qwerty")
     db_sess = db_session.create_session()
     db_sess.add(user)
     news = News(title="Первая новость", content="Привет блог!",
@@ -124,8 +128,4 @@ def tmp_fill_base():
 
 
 if __name__ == '__main__':
-    x = generate_password_hash('123')
-    print(x)
-    # первый аргумент - сохранённый хэш, второй - введённый пароль
-    print(check_password_hash(x, '123'))
     main()
