@@ -1,4 +1,5 @@
 import flask
+from flask import jsonify
 
 from . import db_session
 from .news import News
@@ -12,4 +13,26 @@ blueprint = flask.Blueprint(
 
 @blueprint.route('/api/news')
 def get_news():
-    return "Обработчик в news_api"
+    db_sess = db_session.create_session()
+    news = db_sess.query(News).all()
+    return jsonify(
+        {
+            'news':
+                [item.to_dict(only=('id', 'title', 'is_private', 'user.name', 'user.id'))
+                 for item in news]
+        }
+    )
+
+
+@blueprint.route('/api/news/<int:news_id>', methods=['GET'])
+def get_one_news(news_id):
+    db_sess = db_session.create_session()
+    news = db_sess.query(News).get(news_id)
+    if not news:
+        return jsonify({'error': 'Not found'})
+    return jsonify(
+        {
+            'news': news.to_dict(only=(
+                'id', 'title', 'content', 'user.id', 'user.name', 'is_private'))
+        }
+    )
