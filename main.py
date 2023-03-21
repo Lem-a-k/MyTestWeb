@@ -1,4 +1,6 @@
+import news_resources
 from flask import Flask, url_for, render_template, redirect, session, make_response, jsonify
+from flask_restful import Api
 from flask_wtf import FlaskForm
 from wtforms import EmailField, StringField, PasswordField, BooleanField, SubmitField, FileField
 from wtforms.validators import DataRequired
@@ -11,6 +13,8 @@ from data.news import News
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
+api = Api(app)
+
 login_manager = LoginManager()
 login_manager.init_app(app)
 
@@ -139,6 +143,10 @@ def main():
         # db_sess.add(news)
         # db_sess.commit()
     app.register_blueprint(news_api.blueprint)
+    # для списка объектов
+    api.add_resource(news_resources.NewsListResource, '/api/v2/news')
+    # для одного объекта
+    api.add_resource(news_resources.NewsResource, '/api/v2/news/<int:news_id>')
     app.run()  # port=8080, host='127.0.0.1'
 
 
