@@ -1,4 +1,4 @@
-from flask import Flask, url_for, render_template, redirect, session
+from flask import Flask, url_for, render_template, redirect, session, make_response, jsonify
 from flask_wtf import FlaskForm
 from wtforms import EmailField, StringField, PasswordField, BooleanField, SubmitField, FileField
 from wtforms.validators import DataRequired
@@ -45,6 +45,11 @@ class AvatarForm(FlaskForm):
 
 
 # TODO: logout
+
+@app.errorhandler(404)
+def not_found(error):
+    return make_response(jsonify({'error': 'Not found 404'}), 404)
+
 
 @app.route('/avatar', methods=['GET', 'POST'])
 def avatar():
