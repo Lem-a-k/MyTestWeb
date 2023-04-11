@@ -4,4 +4,5 @@ flask-wtf
 flask-restful
 flask-login
 sqlalchemy
+sqlalchemy-serializer
 werkzeug
