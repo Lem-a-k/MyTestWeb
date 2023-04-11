@@ -1,5 +1,6 @@
-import news_resources
-from flask import Flask, url_for, render_template, redirect, session, make_response, jsonify
+import logging
+
+from flask import Flask, url_for, render_template, redirect, session, make_response, jsonify, request
 from flask_restful import Api
 from flask_wtf import FlaskForm
 from wtforms import EmailField, StringField, PasswordField, BooleanField, SubmitField, FileField
@@ -7,9 +8,13 @@ from wtforms.validators import DataRequired
 from werkzeug.utils import secure_filename
 from flask_login import LoginManager, login_user
 
+import news_resources
+from alice_skill import handle_dialog
 from data import db_session, news_api
 from data.users import User
 from data.news import News
+
+logging.basicConfig(level=logging.INFO)
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
@@ -19,6 +24,26 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 
 DEBUG_MODE = True
+
+# для Алисы
+session_storage = {}
+
+
+@app.route('/post', methods=['POST'])
+def alice_main():
+    logging.info(f'Request: {request.json!r}')
+
+    response = {
+        'session': request.json['session'],
+        'version': request.json['version'],
+        'response': {
+            'end_session': False
+        }
+    }
+
+    handle_dialog(request.json, response, session_storage)
+    logging.info(f'Response:  {response!r}')
+    return jsonify(response)
 
 
 @login_manager.user_loader
